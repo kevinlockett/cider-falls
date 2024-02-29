@@ -55,7 +55,7 @@ const database = {
         icon: "fa-duotone fa-user-tie"
     }, {
         id: 2,
-        service: "Boat Rental",
+        service: "Boating",
         icon: "fa-duotone fa-ship"
     }, {
         id: 3,
@@ -75,11 +75,11 @@ const database = {
         icon: "fa-duotone fa-fishing-rod"
     }, {
         id: 7,
-        service: "Food Carts",
+        service: "Food Cart Area",
         icon: "fa-duotone fa-burger-soda"
     }, {
         id: 8,
-        service: "Hiking Trails",
+        service: "Hiking",
         icon: "fa-duotone fa-person-hiking"
     }, {
         id: 9,
@@ -95,7 +95,7 @@ const database = {
         icon: "fa-duotone fa-bed-front"
     }, {
         id: 12,
-        service: "Nordic Ski Trails",
+        service: "Nordic Skiing",
         icon: "fa-duotone fa-person-skiing-nordic"
     }, {
         id: 13,
@@ -111,7 +111,7 @@ const database = {
         icon: "fa-duotone fa-mountain"
     }, {
         id: 16,
-        service: "Sail Boat Rental",
+        service: "Sailing",
         icon: "fa-duotone fa-sailboat"
     }],
     areaServices: [
@@ -370,4 +370,8 @@ export const getServices = () => {
 
 export const getAreaServices = () => {
     return database.areaServices.map(areaService => ({...areaService}))
+}
+
+export const getGuests = () => {
+    return database.guests.map(guest => ({...guest}))
 }

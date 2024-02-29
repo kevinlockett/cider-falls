@@ -1,21 +1,9 @@
-import { getAreaServices, getDestinations, getServices } from "./database.js"
+import { getAreaServices, getDestinations, getGuests, getServices } from "./database.js"
 
 const areaServices = getAreaServices()
 const destinations = getDestinations()
+const guests = getGuests()
 const services = getServices()
-
-const destinationList = (serviceObj) => {
-    let destinationArr = []
-    for (const areaService of areaServices)
-        if (areaService.serviceId === serviceObj.id) {
-            for (const destination of destinations) {
-                if (areaService.destinationId === destination.id) {
-                    destinationArr.push(destination.destination)
-                }
-            }
-        }
-    return destinationArr
-}
 
 const servicesList = (destination) => {
     let servicesListHtml = `
@@ -27,7 +15,7 @@ const servicesList = (destination) => {
                 if (areaService.serviceId === service.id)
                 {
                     servicesListHtml += `
-                        <li id=service--${service.id}>
+                        <li class="services-item" >
                             <a href="#" class="services-link" aria-label="${destination.destination}"><i class="${service.icon}"></i></a>
                         </li>`
                 }
@@ -38,17 +26,29 @@ const servicesList = (destination) => {
         return servicesListHtml
 }
 
+const countGuests = (destination) => {
+    let guestCount = 0
+    for (const guest of guests) {
+        if (destination.id === guest.destinationId) {
+            guestCount ++
+        }
+    }
+
+    return guestCount
+}
+
 document.addEventListener("click", (clickEvent) => {
     const itemClicked = clickEvent.target
-    
-    if (itemClicked.dataset.type === "services") {
-        const [, serviceId] = itemClicked.id.split("--")
 
-        for (const service of services) {
-            if (service.id === parseInt(serviceId)) {
-                let clickedService = serviceDestinations(service)
-                let destinationList = clickedService.join(" and ")
-                window.alert(`${service.service} is available at ${destinationList}`)
+    if (itemClicked.dataset.type === "destination") {
+
+        for (const destination of destinations) {
+            let areaPopulation = 0
+            if (destination.id === parseInt(itemClicked.dataset.id)) {
+                let guestCount = countGuests(destination)
+                areaPopulation += guestCount
+
+                window.alert(`There are ${areaPopulation} guests in the ${destination.section} Section`)
             }
         }
     }
@@ -60,23 +60,23 @@ export const Destinations = () => {
     
     for (const destination of destinations) {
         destinationsHTML += `
-            <div class="card">
+            <div class="card" >
                 <div class="card__image">
-                    <img src="../img/${destination.image}" alt="${destination.alt}" class="image">`    
+                    <img data-id="${destination.id}" data-type="destination" src="../img/${destination.image}" alt="${destination.alt}" class="image">`    
                     
         destinationsHTML += servicesList(destination)
     
         destinationsHTML += `
             </div>
-            <div class="card__information">
-                <div class="card__title">
-                    <h2>${destination.destination}</h2>
+            <div class="card__information" >
+                <div class="card__title" >
+                    <h2 data-id="${destination.id}" data-type="destination">${destination.destination}</h2>
                 </div>
                 <div class="card__location">
-                    <h3>${destination.section} Section</h3>
+                    <h3 data-id="${destination.id}" data-type="destination">${destination.section} Section</h3>
                 </div>
                 <div class="card__services">
-                    <p>${destination.description}</p>
+                    <p data-id="${destination.id}" data-type="destination">${destination.description}</p>
                 </div>
             </div>
         </div>`
